@@ -5,13 +5,15 @@ VisualStudioVersion = 16.0.30404.54
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Cache", "Cache", "{850830FC-8D44-4B1F-8602-BA4CCCE53EE2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DistributeTools.DistributeCache", "DistributeTools.DistributeCache\DistributeTools.DistributeCache.csproj", "{39427454-B28D-4ADA-923C-1C15A7DF8922}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DistributeTools.DistributeCache", "DistributeTools.DistributeCache\DistributeTools.DistributeCache.csproj", "{39427454-B28D-4ADA-923C-1C15A7DF8922}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{62B56BC3-0AE6-4B1A-B6FC-897277FE292A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Cache", "Cache", "{3551E912-402E-4CCD-819D-C118BF6909B5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DistributeCache.Test.Web", "DistributeCache.Test.Web\DistributeCache.Test.Web.csproj", "{74674042-4E7C-4257-8CD4-980AFE66FC0F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DistributeCache.Test.Web", "DistributeCache.Test.Web\DistributeCache.Test.Web.csproj", "{74674042-4E7C-4257-8CD4-980AFE66FC0F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DistributeCache.Test.Api", "DistributeCache.Test.Api\DistributeCache.Test.Api.csproj", "{F7F20DAD-EC42-4152-A9D9-89AD62D4629A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{74674042-4E7C-4257-8CD4-980AFE66FC0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{74674042-4E7C-4257-8CD4-980AFE66FC0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{74674042-4E7C-4257-8CD4-980AFE66FC0F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7F20DAD-EC42-4152-A9D9-89AD62D4629A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7F20DAD-EC42-4152-A9D9-89AD62D4629A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7F20DAD-EC42-4152-A9D9-89AD62D4629A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7F20DAD-EC42-4152-A9D9-89AD62D4629A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -35,6 +41,7 @@ Global
 		{39427454-B28D-4ADA-923C-1C15A7DF8922} = {850830FC-8D44-4B1F-8602-BA4CCCE53EE2}
 		{3551E912-402E-4CCD-819D-C118BF6909B5} = {62B56BC3-0AE6-4B1A-B6FC-897277FE292A}
 		{74674042-4E7C-4257-8CD4-980AFE66FC0F} = {3551E912-402E-4CCD-819D-C118BF6909B5}
+		{F7F20DAD-EC42-4152-A9D9-89AD62D4629A} = {3551E912-402E-4CCD-819D-C118BF6909B5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C559EA77-49B8-4EF6-B5E5-496416AC5610}

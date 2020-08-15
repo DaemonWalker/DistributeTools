@@ -1,4 +1,5 @@
 ﻿using CSRedis;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -12,10 +13,12 @@ namespace DistributeTools.DistributeCache.Internal
         private readonly CSRedisClient redisClient;
         private readonly DistributeCacheConfig config;
         private ConcurrentDictionary<string, CacheInfo> caches;
-        public Cache(IServiceProvider service, DistributeCacheConfig config)
+        private ILogger<Cache> logger;
+        public Cache(ILogger<Cache> logger, IServiceProvider service, DistributeCacheConfig config)
         {
             this.service = service;
             this.config = config;
+            this.logger = logger;
             this.caches = new ConcurrentDictionary<string, CacheInfo>();
             redisClient = new CSRedisClient(config.RedisConnectionString);
         }
@@ -23,8 +26,10 @@ namespace DistributeTools.DistributeCache.Internal
         {
             if (this.caches.ContainsKey(key))
             {
+                logger.LogInformation("Found at local with key:", key);
                 return caches[key].GetData();
             }
+            logger.LogInformation("Fetch data from remote with key:", key);
             return redisClient.Get<byte[]>(key);
         }
 
@@ -32,13 +37,14 @@ namespace DistributeTools.DistributeCache.Internal
         {
             if (this.caches.TryGetValue(key, out var info))
             {
-                info = service.GetService(typeof(CacheInfo)) as CacheInfo;
                 info.UpdateData(value);
-                this.caches.TryAdd(key, info);
+                
             }
             else
             {
+                info = service.GetService(typeof(CacheInfo)) as CacheInfo;
                 info.UpdateData(value);
+                this.caches.TryAdd(key, info);
             }
             this.redisClient.SetAsync(key, value, config.ExpireSeconds);
         }
