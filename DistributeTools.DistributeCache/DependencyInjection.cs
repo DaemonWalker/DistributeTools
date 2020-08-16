@@ -8,10 +8,14 @@ namespace DistributeTools.DistributeCache
 {
     public static class DependencyInjection
     {
-        public static void AddDistributeCache(this IServiceCollection services,Action<DistributeCacheConfig> configAction)
+        public static void AddDistributeCache(this IServiceCollection services, Action<DistributeCacheConfig> configAction)
         {
             var config = new DistributeCacheConfig();
             configAction.Invoke(config);
+            if (string.IsNullOrEmpty(config.MachineName))
+            {
+                config.MachineName = Guid.NewGuid().ToString("N");
+            }
             services.AddSingleton<ICache, Cache>();
             services.AddTransient<CacheInfo>();
             services.AddSingleton(config);
