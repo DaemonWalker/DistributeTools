@@ -8,5 +8,7 @@ namespace DistributeTools.DistributeCache
     {
         public int ExpireSeconds { get; set; }
         public string RedisConnectionString { get; set; }
+        public string SyncChannel { get; set; }
+        public string MachineName { get; set; } = Guid.NewGuid().ToString("N");
     }
 }

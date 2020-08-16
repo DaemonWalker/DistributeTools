@@ -1,8 +1,11 @@
-﻿using System;
+﻿using DistributeTools.DistributeCache.Internal;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
+using System.Text.Json;
+using static CSRedis.CSRedisClient;
 
 namespace DistributeTools.DistributeCache
 {
@@ -67,6 +70,14 @@ namespace DistributeTools.DistributeCache
                 var formatter = new BinaryFormatter();
                 return (T)formatter.Deserialize(ms);
             }
+        }
+        internal static string Serialize(this CacheInfo cache)
+        {
+            return JsonSerializer.Serialize(cache);
+        }
+        internal static SyncMessage Deserialize(this SubscribeMessageEventArgs args)
+        {
+            return JsonSerializer.Deserialize<SyncMessage>(args.Body);
         }
     }
 }

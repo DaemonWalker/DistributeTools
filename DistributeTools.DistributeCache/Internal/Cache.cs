@@ -26,19 +26,19 @@ namespace DistributeTools.DistributeCache.Internal
         {
             if (this.caches.ContainsKey(key))
             {
-                logger.LogInformation("Found at local with key:", key);
+                logger.LogInformation($"Found key: '{key}' at local");
                 return caches[key].GetData();
             }
-            logger.LogInformation("Fetch data from remote with key:", key);
+            logger.LogInformation($"Fetch key: '{key}' from Redis");
             return redisClient.Get<byte[]>(key);
         }
 
         public void Set(string key, byte[] value)
         {
+            logger.LogInformation($"Set key: '{key}' at local cache");
             if (this.caches.TryGetValue(key, out var info))
             {
                 info.UpdateData(value);
-                
             }
             else
             {
@@ -46,7 +46,16 @@ namespace DistributeTools.DistributeCache.Internal
                 info.UpdateData(value);
                 this.caches.TryAdd(key, info);
             }
+            logger.LogInformation($"Set key: '{key}' to Redis");
+            this.redisClient.Publish(config.SyncChannel, info.Serialize());
             this.redisClient.SetAsync(key, value, config.ExpireSeconds);
+        }
+        internal void InternalUpdate(string key, byte[] value)
+        {
+            if (caches.TryGetValue(key, out var info))
+            {
+                info.UpdateDataWithoutRenew(value);
+            }
         }
     }
 }
