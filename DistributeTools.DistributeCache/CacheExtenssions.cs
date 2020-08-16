@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Text.Json;
@@ -70,14 +71,6 @@ namespace DistributeTools.DistributeCache
                 var formatter = new BinaryFormatter();
                 return (T)formatter.Deserialize(ms);
             }
-        }
-        internal static string Serialize(this CacheInfo cache)
-        {
-            return JsonSerializer.Serialize(cache);
-        }
-        internal static SyncMessage Deserialize(this SubscribeMessageEventArgs args)
-        {
-            return JsonSerializer.Deserialize<SyncMessage>(args.Body);
         }
     }
 }

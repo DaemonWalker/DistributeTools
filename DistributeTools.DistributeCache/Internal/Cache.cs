@@ -4,6 +4,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.Json;
 
 namespace DistributeTools.DistributeCache.Internal
 {
@@ -49,7 +50,7 @@ namespace DistributeTools.DistributeCache.Internal
                 this.caches.TryAdd(key, info);
             }
             logger.LogInformation($"Set key: '{key}' to Redis");
-            this.redisClient.Publish(config.SyncChannel, info.Serialize());
+            this.redisClient.PublishAsync(config.SyncChannel, ConvertToSyncMessageJson(this.config.MachineName, key, value));
             this.redisClient.SetAsync(key, value, config.ExpireSeconds);
         }
         internal void InternalUpdate(string key, byte[] value)
@@ -59,6 +60,12 @@ namespace DistributeTools.DistributeCache.Internal
                 logger.LogInformation($"Receive new value from Redis, key: {key}");
                 info.UpdateDataWithoutRenew(value);
             }
+        }
+
+        private static string ConvertToSyncMessageJson(string machineName, string key, byte[] value)
+        {
+            var syncInfo = new SyncMessage(machineName, key, value);
+            return JsonSerializer.Serialize(syncInfo);
         }
     }
 }

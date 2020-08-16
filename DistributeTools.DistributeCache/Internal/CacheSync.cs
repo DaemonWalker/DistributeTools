@@ -5,6 +5,7 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
+using System.Text.Json;
 using static CSRedis.CSRedisClient;
 
 namespace DistributeTools.DistributeCache.Internal
@@ -20,26 +21,42 @@ namespace DistributeTools.DistributeCache.Internal
             this.config = config;
             this.cache = cache;
             redisClient = new CSRedisClient(config.RedisConnectionString);
-            if (string.IsNullOrEmpty(config.SyncChannel))
+            if (string.IsNullOrEmpty(config.SyncChannel) == false)
             {
                 redisClient.Subscribe((
-                    nameof(config.SyncChannel),
+                    config.SyncChannel,
                     this.Sync));
             }
         }
         private void Sync(SubscribeMessageEventArgs args)
         {
-            SyncMessage msg = args.Deserialize();
-            if (msg.MachineName != config.MachineName)
+            var msg = Deserialize(args.Body);
+            if (msg.MachineName != this.config.MachineName)
             {
-                cache.InternalUpdate(msg.Key, msg.Value);
+                cache.InternalUpdate(msg.Key, msg.GetBytes());
             }
+        }
+
+        private static SyncMessage Deserialize(string body)
+        {
+            return JsonSerializer.Deserialize<SyncMessage>(body);
         }
     }
     internal class SyncMessage
     {
+        public SyncMessage() { }
+        public SyncMessage(string machineName, string key, byte[] value)
+        {
+            this.MachineName = machineName;
+            this.Key = key;
+            this.Value = Convert.ToBase64String(value);
+        }
         public string MachineName { get; set; }
         public string Key { get; set; }
-        public byte[] Value { get; set; }
+        public string Value { get; set; }
+        public byte[] GetBytes()
+        {
+            return Convert.FromBase64String(Value);
+        }
     }
 }

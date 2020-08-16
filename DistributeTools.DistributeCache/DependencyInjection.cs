@@ -11,11 +11,9 @@ namespace DistributeTools.DistributeCache
         public static void AddDistributeCache(this IServiceCollection services, Action<DistributeCacheConfig> configAction)
         {
             var config = new DistributeCacheConfig();
+            config.MachineName = Guid.NewGuid().ToString("N");
+            config.SyncChannel = nameof(config.SyncChannel);
             configAction.Invoke(config);
-            if (string.IsNullOrEmpty(config.MachineName))
-            {
-                config.MachineName = Guid.NewGuid().ToString("N");
-            }
             services.AddSingleton<ICache, Cache>();
             services.AddTransient<CacheInfo>();
             services.AddSingleton(config);
