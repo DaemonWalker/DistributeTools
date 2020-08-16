@@ -12,15 +12,17 @@ namespace DistributeTools.DistributeCache.Internal
         private readonly IServiceProvider service;
         private readonly CSRedisClient redisClient;
         private readonly DistributeCacheConfig config;
-        private ConcurrentDictionary<string, CacheInfo> caches;
+        private readonly ConcurrentDictionary<string, CacheInfo> caches;
+        private readonly CacheSync sync;
         private ILogger<Cache> logger;
-        public Cache(ILogger<Cache> logger, IServiceProvider service, DistributeCacheConfig config)
+        public Cache(ILogger<Cache> logger, ILogger<CacheSync> syncLogger, IServiceProvider service, DistributeCacheConfig config)
         {
             this.service = service;
             this.config = config;
             this.logger = logger;
             this.caches = new ConcurrentDictionary<string, CacheInfo>();
             redisClient = new CSRedisClient(config.RedisConnectionString);
+            this.sync = new CacheSync(this, config);
         }
         public byte[] Get(string key)
         {
@@ -54,6 +56,7 @@ namespace DistributeTools.DistributeCache.Internal
         {
             if (caches.TryGetValue(key, out var info))
             {
+                logger.LogInformation($"Receive new value from Redis, key: {key}");
                 info.UpdateDataWithoutRenew(value);
             }
         }
